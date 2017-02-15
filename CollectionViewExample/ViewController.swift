@@ -7,8 +7,9 @@
 //
 
 import UIKit
+import DZNEmptyDataSet;
 
-class ViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
+class ViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, DZNEmptyDataSetDelegate,DZNEmptyDataSetSource {
     
     @IBOutlet weak var collectionView: UICollectionView!
     
@@ -17,6 +18,8 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         // Do any additional setup after loading the view, typically from a nib.
         collectionView.delegate = self
         collectionView.dataSource = self
+        self.collectionView.emptyDataSetSource = self;
+        self.collectionView.emptyDataSetDelegate = self;
         configureCVLayout()
     }
 
@@ -25,7 +28,28 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
+        return 0
+    }
+    
+    func customView(forEmptyDataSet scrollView: UIScrollView!) -> UIView! {
+        let activityView = UIView()
+        let label = UILabel()
+        label.backgroundColor = UIColor.lightGray
+        label.textColor = UIColor.white
+        label.text = "Nohting found here!"
+        label.textAlignment = NSTextAlignment.center
+        
+        label.translatesAutoresizingMaskIntoConstraints = false
+        activityView.addSubview(label)
+
+        let widthConstraint = label.widthAnchor.constraint(equalToConstant: 200)
+        let heightConstraint = label.heightAnchor.constraint(equalTo: activityView.heightAnchor, multiplier: 1)
+        let horizontalConstraint = label.centerXAnchor.constraint(equalTo: activityView.centerXAnchor, constant: 1)
+        let verticalConstraint = label.centerYAnchor.constraint(equalTo: activityView.centerYAnchor, constant: 1)
+        NSLayoutConstraint.activate([horizontalConstraint, verticalConstraint, widthConstraint, heightConstraint])
+
+        
+        return activityView;
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
